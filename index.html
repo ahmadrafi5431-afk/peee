@@ -1,108 +1,197 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maafin Aku Sayang🥺💗</title>
-    <style>
-        body {
-            background-color: #3f4c6b;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            color: white;
-            margin: 0;
-            padding-top: 30px;
-        }
+<meta charset="UTF-8">
+<title>Mini Game Minta Maaf</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #ff9eb3, #ffd6e0);
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+    }
 
-        h1 {
-            font-size: 30px;
-            font-weight: bold;
-        }
+    #box {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.15);
+        width: 330px;
+        z-index: 10;
+    }
 
-        video {
-            width: 300px;
-            border-radius: 20px;
-            margin-top: 20px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.4);
-        }
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 5px;
+    }
 
-        p {
-            margin-top: 20px;
-            font-size: 20px;
-        }
+    #yes {
+        background: #ff4d6d;
+        color: white;
+        position: relative;
+    }
 
-        .btn {
-            padding: 15px 35px;
-            border: none;
-            border-radius: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 40px 25px;
-        }
+    #no {
+        background: #ccc;
+    }
 
-        .iya {
-            background-color: #4CAF50;
-            color: black;
-        }
+    /* ✨ Karakter ASCII (ANIMATED) */
+    #ascii {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: pre;
+        font-size: 20px;
+        animation: bounce 1s infinite ease-in-out;
+        z-index: 9;
+    }
 
-        .ga {
-            background-color: #ff4e4e;
-            color: black;
-            position: relative;
-        }.heart {
-    position: absolute;
-    font-size: 25px;
-    color: #ff85d0;
-    animation: naik 2s linear forwards;
-    pointer-events: none;
-}
+    @keyframes bounce {
+        0% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-12px); }
+        100% { transform: translateX(-50%) translateY(0); }
+    }
 
-@keyframes naik {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-150px); opacity: 0; }
-}
-    </style>
+    /* ❤️ Efek hati */
+    .heart {
+        position: fixed;
+        top: -10px;
+        font-size: 20px;
+        color: #ff4d6d;
+        animation: fall linear infinite;
+        opacity: 0.8;
+    }
+
+    @keyframes fall {
+        0% { transform: translateY(-10px) rotate(0deg); }
+        100% { transform: translateY(110vh) rotate(360deg); }
+    }
+</style>
 </head>
 <body>
 
-    <h1>Princess masih marah ya? 😭</h1>
-<video controls autoplay muted loop playsinline width="500" height="500">
-    <source src="asset/maap.mp4" type="video/mp4">
-</video>
+<!-- Backsound -->
+<audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/15/audio_410f8abd47.mp3?filename=romantic-music-143344.mp3">
+</audio>
 
-    <p>Maafin aku yaa sayangku Jia... 🥺💗</p>
+<!-- ✨ Karakter ASCII -->
+<div id="ascii">
+(\_/)
+( •_•)
+ / >🤍
+</div>
 
-    <button class="btn iya" onclick="alert('makasih sayanggg 😭💗')">IYA</button>
+<div id="box">
+    <h2>aku mau ngomong…</h2>
+    <button id="start">mulai dialog 🤍</button>
+</div>
 
-    <button class="btn ga" id="gaBtn">GA</button>
+<script>
+    const box = document.getElementById("box");
+    const bgm = document.getElementById("bgm");
+    const ascii = document.getElementById("ascii");
+    let step = 0;
 
-    <script>
-        const ga = document.getElementById("gaBtn");
+    document.getElementById("start").addEventListener("click", () => {
+        bgm.play();
+        nextDialog();
+    });
 
-        ga.addEventListener("mouseover", () => {
-            ga.style.position = "absolute";
-            ga.style.left = Math.random() * 80 + "vw";
-            ga.style.top = Math.random() * 80 + "vh";
-        });
-    function spawnHeart() {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.textContent = "💗";
+    function nextDialog() {
+        step++;
 
-        heart.style.left = Math.random() * 90 + "vw";
-        heart.style.top = Math.random() * 90 + "vh";
+        if (step === 1) {
+            asciiSpeech("Kamu masih marah ya? 😿");
+            box.innerHTML = `
+                <h2>kamu masi mara sama aku?</h2>
+                <button id="yes">iyaa ☹️</button>
+                <button id="no">gaa 🙂</button>
+            `;
+            handleButtons();
+        }
 
-        document.body.appendChild(heart);
+        if (step === 2) {
+            asciiSpeech("Aku tau... aku salah...");
+            box.innerHTML = `
+                <h2>aku tau kok… aku sala</h2>
+                <button id="next">Lanjut...</button>
+            `;
+            document.getElementById("next").onclick = nextDialog;
+        }
 
-        setTimeout(() => {
-            heart.remove();
-        }, 2000);
+        if (step === 3) {
+            asciiSpeech("Aku bener-bener nyesel 😿");
+            box.innerHTML = `
+                <h2>harusnya aku kasi tau kamu lebi awal</h2>
+                <button id="next">aku nyesel...</button>
+            `;
+            document.getElementById("next").onclick = nextDialog;
+        }
+
+        if (step === 4) {
+            asciiSpeech("Aku ga mau kehilangan kamu 🤍");
+            box.innerHTML = `
+                <h2>kamu itu prioritas aku.</h2>
+                <p>dan aku bener-bener ga mau kehilangan kamu.</p>
+                <button id="next">...</button>
+            `;
+            document.getElementById("next").onclick = nextDialog;
+        }
+
+        if (step === 5) {
+            asciiSpeech("Maafin aku ya... 😭🤍");
+            box.innerHTML = `
+                <h2>maafin aku ya 🤍</h2>
+                <p>aku janji bakal ngejaga perasaan kamu</p>
+                <p>karena cuman kamu yang aku mau</p>
+            `;
+        }
     }
 
-    // spam hati tiap 200ms
-    setInterval(spawnHeart, 200);
-    </script>
+    function handleButtons() {
+        const yes = document.getElementById("yes");
+        const no = document.getElementById("no");
+
+        yes.addEventListener("click", () => {
+            yes.style.position = "absolute";
+            yes.style.left = Math.random() * window.innerWidth + "px";
+            yes.style.top = Math.random() * window.innerHeight + "px";
+            asciiSpeech("Jangan marah dong... 😿");
+        });
+
+        no.addEventListener("click", () => {
+            step = 1;
+            nextDialog();
+        });
+    }
+
+    function asciiSpeech(text) {
+        ascii.title = text;
+    }
+
+    // ❤️ Efek hati jatuh
+    function createHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "🤍";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+        heart.style.fontSize = (15 + Math.random() * 20) + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }
+    setInterval(createHeart, 300);
+</script>
 
 </body>
 </html>
